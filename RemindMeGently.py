@@ -10,7 +10,7 @@ logging.basicConfig(
 
 # Command handlers
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Sends an introduction message."""
+    # introduction message.
     await update.message.reply_text('''
 🤖 Welcome to RemindMeGently!
 
@@ -21,12 +21,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 /removeReminder - Remove a reminder
     ''')
 
+# Remind Process
 async def remind(context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Sends the reminder message."""
     job = context.job
     reminder_name = job.data.get('reminder_name')
     await context.bot.send_message(job.chat_id, text=f"⏰ Reminder: {reminder_name}!")
 
+# Setting Reminders
 async def set_reminder(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Adds a new reminder."""
     chat_id = update.message.chat_id
@@ -57,6 +58,7 @@ async def set_reminder(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     except (IndexError, ValueError):
         await update.message.reply_text("⚠️ Usage: /addReminder <name> <24hr_format_time>")
 
+# Removing Reminders
 async def unset_reminder(update: Update, context: CallbackContext) -> None:
     """Removes a reminder."""
     if len(context.args) == 0:
@@ -76,6 +78,7 @@ async def unset_reminder(update: Update, context: CallbackContext) -> None:
     
     await update.message.reply_text(f"✅ Successfully removed reminder named '{reminder_name}'.")
 
+# Viewing Reminders List
 async def reminders(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Lists all reminders for the user."""
     job_queue = context.job_queue
@@ -93,6 +96,7 @@ async def reminders(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reminders_list = "\n".join(reminder_names)
     await update.message.reply_text(f"📅 Your reminders:\n{reminders_list}")
 
+# Unknown Command Handling
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handles unknown commands."""
     await update.message.reply_text('''
